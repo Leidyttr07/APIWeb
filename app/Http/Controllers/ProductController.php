@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -21,15 +22,16 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return "create";
+        return view('product.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        //
+        Product::create($request->validated());
+        return redirect()->route('prod.index')->with('success', 'Producto creado exitosamente.');
     }
 
     /**
@@ -37,7 +39,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return "show " . $id;
+        $product = Product::findOrFail($id);
+        return view('product.show', compact('product'));
     }
 
     /**
@@ -45,15 +48,18 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        return "edit " . $id;
+        $product = Product::findOrFail($id);
+        return view('product.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->update($request->validated());
+        return redirect()->route('prod.index')->with('success', 'Producto actualizado exitosamente.');
     }
 
     /**
@@ -61,6 +67,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->route('prod.index')->with('success', 'Producto eliminado exitosamente.');
     }
 }

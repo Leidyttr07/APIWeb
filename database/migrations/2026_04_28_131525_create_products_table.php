@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('id_product');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
+            // $table->timestamps(); // Removido porque el modelo usa WithoutTimestamps
         });
     }
 
